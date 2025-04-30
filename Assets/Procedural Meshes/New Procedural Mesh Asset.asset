@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a700921aabdb834e90d5591fb5fb0e7, type: 3}
   m_Name: New Procedural Mesh Asset
   m_EditorClassIdentifier: 
-  resolution: {x: 36, y: 3}
+  resolution: {x: 30, y: 3}
   radius: 1
   tipLength: 1
+  direction: {x: 0, y: 0, z: 1}
