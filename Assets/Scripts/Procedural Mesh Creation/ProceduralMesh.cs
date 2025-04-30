@@ -43,10 +43,13 @@ namespace ProceduralMeshCreation
 
         private void Refresh(ProceduralMeshAsset meshAsset)
         {
-            meshAsset.BuildMesh(Mesh);
-            Mesh.name = meshAsset.name + " Generated";
-            MeshFilter.sharedMesh = Mesh;
-            Debug.Log(meshAsset.ToString());
+            if (meshAsset)
+            {
+                meshAsset.BuildMesh(Mesh);
+                Mesh.name = meshAsset.name + " Generated";
+                MeshFilter.sharedMesh = Mesh;
+                Debug.Log(meshAsset.ToString());
+            }
         }
 
         private void OnValidate()
