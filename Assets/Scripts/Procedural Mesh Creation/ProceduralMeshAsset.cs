@@ -8,6 +8,11 @@ namespace ProceduralMeshCreation
     {
         internal event System.Action<ProceduralMeshAsset> OnChanged;
         
+        public virtual /*abstract*/ void BuildMesh(Mesh mesh)
+        {
+
+        }
+
 
         protected virtual void OnValidate()
         {
