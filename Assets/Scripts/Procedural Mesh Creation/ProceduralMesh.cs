@@ -43,6 +43,14 @@ namespace ProceduralMeshCreation
 
         private void Refresh(ProceduralMeshAsset meshAsset)
         {
+#if UNITY_EDITOR
+            if (this == null && meshAsset)
+            {
+                meshAsset.OnChanged -= Refresh;
+                return;
+            }
+#endif
+
             if (enabled && meshAsset)
             {
                 meshAsset.BuildMesh(Mesh);
