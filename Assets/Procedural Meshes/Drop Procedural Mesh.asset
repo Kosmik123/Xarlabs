@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Drop Procedural Mesh
   m_EditorClassIdentifier: 
   resolution: {x: 30, y: 10}
-  radius: 1
-  tipLength: 1
+  radius: 0.5
+  tipLength: 0.5
   direction: {x: 0, y: 0, z: 1}
