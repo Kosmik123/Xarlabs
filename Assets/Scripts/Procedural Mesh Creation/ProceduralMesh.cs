@@ -33,7 +33,7 @@ namespace ProceduralMeshCreation
         private ProceduralMeshAsset previousProceduralMeshAsset;
 #endif
 
-        private void Awake()
+        private void OnEnable()
         {
             Refresh();
         }
@@ -43,12 +43,11 @@ namespace ProceduralMeshCreation
 
         private void Refresh(ProceduralMeshAsset meshAsset)
         {
-            if (meshAsset)
+            if (enabled && meshAsset)
             {
                 meshAsset.BuildMesh(Mesh);
                 Mesh.name = meshAsset.name + " Generated";
                 MeshFilter.sharedMesh = Mesh;
-                Debug.Log(meshAsset.ToString());
             }
         }
 
