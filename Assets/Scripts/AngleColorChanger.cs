@@ -3,13 +3,13 @@ using UnityEngine;
 public class AngleColorChanger : MonoBehaviour
 {
     [SerializeField]
-    private Transform target;
+    private MeshRenderer meshRenderer;
 
     [SerializeField]
     private Gradient colorsByAngle;
 
-    [SerializeField]
-    private MeshRenderer meshRenderer;
+    [Space, SerializeField]
+    private Transform target;
 
     private void Reset()
     {
