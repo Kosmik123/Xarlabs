@@ -20,6 +20,9 @@ public class LimitedSpeedLookAt : MonoBehaviour
 
     private void Update()
     {
+        if (target == null)
+            return;
+
         var transform = this.transform;
         var direction = target.position - transform.position;
 
