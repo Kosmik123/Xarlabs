@@ -22,6 +22,7 @@ namespace ProceduralMeshCreation
         {
             var vertices = ListPool<Vector3>.Get();
             var triangles = ListPool<int>.Get();
+            var uvs = ListPool<Vector2>.Get();
 
             Vector3 tipDirection = direction.normalized;
             Vector3 equatorRadiusAxis = GetPerpendicularDirection(tipDirection);
@@ -32,17 +33,21 @@ namespace ProceduralMeshCreation
             float longitudeDelta = 360f / resolution.x;
             Vector3 coneBaseRadiusDirection = Quaternion.AngleAxis(-tangentAngle, rotationAxis) * equatorRadiusAxis;
 
+            float uvDeltaX = 1f / (resolution.x - 1);
+
             Cone();
             void Cone()
             {
                 var tipEnd = tipDirection * tipDistanceFromCenter;
                 vertices.Add(tipEnd);
+                uvs.Add(new Vector2(0.5f, 1));
 
                 for (int i = 0; i < resolution.x; i++)
                 {
                     float angle = longitudeDelta * i;
                     var radialVertex = Quaternion.AngleAxis(angle, tipDirection) * coneBaseRadiusDirection * radius;
                     vertices.Add(radialVertex);
+                    uvs.Add(new Vector2(i * uvDeltaX, 0.5f));
 
                     int next = i == resolution.x - 1
                         ? 1
@@ -54,6 +59,8 @@ namespace ProceduralMeshCreation
             Sphere();
             void Sphere()
             {
+                float uvDeltaY = 1f / (resolution.y - 1);
+
                 float latitudeFullAngle = 90 + tangentAngle;
                 float latitudeDelta = latitudeFullAngle / resolution.y;
                 Vector3 pole = -tipDirection * radius;
@@ -66,6 +73,7 @@ namespace ProceduralMeshCreation
                         float angle = longitudeDelta * i;
                         var radialVertex = Quaternion.AngleAxis(angle, tipDirection) * latitudeRadiusDirection * radius;
                         vertices.Add(radialVertex);
+                        uvs.Add(new Vector2(i * uvDeltaX, 0.5f - 0.5f * j * uvDeltaY));
 
                         bool isLast = i == resolution.x - 1;
                         int right = i + 1;
@@ -83,11 +91,12 @@ namespace ProceduralMeshCreation
                 }
 
                 vertices.Add(pole);
+                uvs.Add(new Vector2(0.5f, 0));
                 int lastIndex = vertices.Count - 1;
                 int baseIndex = lastIndex - resolution.x;
                 for (int i = 0; i < resolution.x; i++)
                 {
-                    int right  = baseIndex + i;
+                    int right = baseIndex + i;
                     int left = (i + 1) % resolution.x + baseIndex;
                     AddTriangle(left, right, lastIndex);
                 }
@@ -96,10 +105,12 @@ namespace ProceduralMeshCreation
             mesh.Clear();
             mesh.vertices = vertices.ToArray();
             mesh.triangles = triangles.ToArray();
+            mesh.uv = uvs.ToArray();
             mesh.RecalculateNormals();
 
             ListPool<int>.Release(triangles);
             ListPool<Vector3>.Release(vertices);
+            ListPool<Vector2>.Release(uvs);
 
             void AddTriangle(int a, int b, int c)
             {
