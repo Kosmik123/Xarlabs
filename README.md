@@ -49,6 +49,13 @@ Rotation of object is handled by **LimitedSpeedLookAt** component. It rotates th
 The MeshRenderer, the gradient and the target object can be specified in the inspector.
 
 
+### Mesh Vertex Animation
+Organic movement of mesh vertices is achieved by using a custom shader created in Shadergraph named **Organic**.
+The materials of this shader can be configured with 3 properties:
+1. Color - color of the mesh. It's needed specifically for dynamic color changes of the mesh.
+2. Noise strenght - what distance from the default location can the vertices be moved.
+3. Speed - the speed of of changes.
+
 ## Description of the implementation
 ### Procedural Mesh
 The Procedural Mesh Creation system is based on two classes: (1) ProceduralMesh which is a component and (2) ProceduralMeshAsset which is an abstract class deriving from ScriptableObject class. Developers can define their own procedural meshes by extending ProceduralMeshAsset class and implementing `BuildMesh` method.
@@ -80,9 +87,13 @@ AngleColorChanger uses another pretty straight forward approach. First the dot p
 By using `material` property instead of `sharedMaterial` the material copy is instantiated and assigned to the MeshRenderer. This ensures that only the specified object will change the color and potentially other objects using the same material won't be affected by the color change.
 
 
+### Mesh Vertex Animation
+The Organic shader is created using Shadergraph. The perlin noise values are obtained from *Gradient Noise* node which is basically perlin noise implemented in Shadergraph. The noise is moved in circles thanks to sine and cosine functions applied to time value and *Tiling And Offset* node. Then mesh vertices are moved along corresponding normals in `Vertex` function. In `Fragment` function only the color is applied to *Base Color* output. 
+
+
+
+
 ## Assumptions and challenges
-
-
 
 
 
