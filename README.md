@@ -67,10 +67,16 @@ Because the CalculatePosition method is static and public in can be easily used 
 
 
 ### Object Rotation
+The implementation of the LimitedSpeedLookAt component uses `Vector3.RotateTowards` static method to calculate slightly rotated direction. Then assigns it to transform.forward property resulting in gradual rotation of the object. 
 
+Of course it could be implemented manually by calculation the cross product of the two vectors (current direction and target direction), making it a rotation axis and then rotating the vector by a small angle about this axis. However using `Vector3.RotateTowards` seems to be more elegant approach (and possibly more performant).
 
 
 ### Color Change Based on Angle
+AngleColorChanger uses another pretty straight forward approach. First the dot product is calculated between direction towards target and current forward direction resulting in value in range between 1 and -1, where value equal 1  means object is facing the target and -1 means the object is backwards to the target. This dot value is then converted to a progress value ranging between 0 and 1, which can be then used to evaluate the color from the gradient. Resulting color is then set to the MeshRenderers material. 
+
+By using `material` property instead of `sharedMaterial` the material copy is instantiated and assigned to the MeshRenderer. This ensures that only the specified object will change the color and potentially other objects using the same material won't be affected by the color change.
+
 
 
 ## Assumptions and challenges
