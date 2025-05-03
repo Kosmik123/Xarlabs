@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using static Unity.Mathematics.math;
 
 public class LissajousMovement : MonoBehaviour
 {
@@ -35,15 +36,7 @@ public class LissajousMovement : MonoBehaviour
 
     public static float3 CalculatePosition(float3 amplitude, float3 offset, float3 frequency, float3 phase, float time)
     {
-        float twoPi = 2 * Mathf.PI;
-
-        var position = new float3(
-            Mathf.Sin(frequency.x * twoPi * time + phase.x),
-            Mathf.Sin(frequency.y * twoPi * time + phase.y),
-            Mathf.Sin(frequency.z * twoPi * time + phase.z));
-
-        position *= amplitude;
-        position += offset;
+        var position = amplitude * sin(2 * PI * time * frequency + phase) + offset;
         return position;
     }
 
