@@ -5,15 +5,15 @@ public class LissajousMovement : MonoBehaviour
 {
     [SerializeField]
     private Vector3 amplitude;
-    private float3 Amplitude { get => amplitude; set => amplitude = value; }
+    public float3 Amplitude { get => amplitude; set => amplitude = value; }
 
     [SerializeField]
     private Vector3 offset;
-    private float3 Offset { get => offset; set => offset = value; }
+	public float3 Offset { get => offset; set => offset = value; }
 
     [SerializeField]
     private Vector3 frequency;
-    private float3 Frequency
+	public float3 Frequency
     {
         get => frequency;
         set => frequency = value;
@@ -21,7 +21,7 @@ public class LissajousMovement : MonoBehaviour
 
     [SerializeField]
     private Vector3 phase;
-    private float3 Phase { get => phase; set => phase = value; }
+	public float3 Phase { get => phase; set => phase = value; }
 
     private float time;
 
@@ -31,11 +31,12 @@ public class LissajousMovement : MonoBehaviour
         transform.localPosition = CalculatePosition(time);
     }
 
-    private float3 CalculatePosition(float time) => CalculatePosition(Amplitude, Offset, Frequency, Phase, time);
+	public float3 CalculatePosition(float time) => CalculatePosition(Amplitude, Offset, Frequency, Phase, time);
 
     public static float3 CalculatePosition(float3 amplitude, float3 offset, float3 frequency, float3 phase, float time)
     {
         float twoPi = 2 * Mathf.PI;
+
         var position = new float3(
             Mathf.Sin(frequency.x * twoPi * time + phase.x),
             Mathf.Sin(frequency.y * twoPi * time + phase.y),
