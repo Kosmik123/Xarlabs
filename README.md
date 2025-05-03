@@ -4,12 +4,14 @@
 
 ### Scenes 
 There are two scenes in the project: 
-1) **Example** scene which contains basic arrangement of two objects (*Object A* and *Object B*). 
+1) **Example** scene contains basic arrangement of two objects (*Object A* and *Object B*). 
+2) **XR** scene contains scaled down versions of objects from Example scene and a setup for XR visualisation of the scene (XR Origin and XR Simulator). There are also components which make objects get attracted to player hands by pressing grab button (G key in simulator).
+
 
 ### Procedural Mesh
 In order to use procedurally created mesh two objects are needed:
 1. **ProceduralMesh** component on a GameObject with MeshFilter. This component controls generation of the mesh and assigns it to the MeshFilter.
-2. **ProceduralMeshAsset** asset. It has to be an object of type deriving from ProceduralMeshAsset class and implementing the BuildMesh method. It controls the structure and appearance of the generated mesh.
+2. **ProceduralMeshAsset** asset. It has to be an object of type deriving from ProceduralMeshAsset class and implementing the `BuildMesh` method. It controls the structure and appearance of the generated mesh.
 
 Upon assigning the ProceduralMeshAsset object to the ProceduralMesh component, the mesh will be assigned to the MeshFilter and automatically refreshed in case of any change. Mesh will also be refreshed on game start. It can be also refreshed manually by choosing "Refresh" option from component context menu. Disabling the component disables the automatic refreshing.
 
@@ -49,21 +51,21 @@ The MeshRenderer, the gradient and the target object can be specified in the ins
 
 ## Description of the implementation
 ### Procedural Mesh
-The Procedural Mesh Creation system is based on two classes: (1) ProceduralMesh which is a component and (2) ProceduralMeshAsset which is an abstract class deriving from ScriptableObject class. Developers can define their own procedural meshes by extending ProceduralMeshAsset class and implementing BuildMesh method.
+The Procedural Mesh Creation system is based on two classes: (1) ProceduralMesh which is a component and (2) ProceduralMeshAsset which is an abstract class deriving from ScriptableObject class. Developers can define their own procedural meshes by extending ProceduralMeshAsset class and implementing `BuildMesh` method.
 
-ProceduralMeshAsset contains an internal event **OnChanged** which ProceduralMesh it's assigned to listens to. It is invoked in assets OnValidate method. This makes the scene mesh instance refresh each time the procedural mesh asset properties change.
+ProceduralMeshAsset contains an internal event `OnChanged` which ProceduralMesh it's assigned to listens to. It is invoked in assets `OnValidate` method. This makes the scene mesh instance refresh each time the procedural mesh asset properties change.
 
 #### DropProceduralMeshAsset
-BuildMesh method of DropProceduralMeshAsset consists of 3 steps: 
+`BuildMesh` method of DropProceduralMeshAsset consists of 3 steps: 
 1) Calculation of important vectors and angles which are needed to correctly generate mesh vertices and UV values.
 2) Populating vertices, triangles and UVs lists. This step is separated into two parts represented by two local functions: (1) generation of cone part and (2) generation of spherical part.
 3) Assigning the vertices, triangles and UVs to the mesh, and finalizing the mesh creation.
 
 
 ### Lissajous Animation
-The Lissajous movement is implemented in very simple way. There is a public static method CalculatePosition which calculates the new postition based on formula parameters and time. Then the result of the method is assigned to the local position of the object. Thanks to the use of Unity Mathematics package the formula form is very simple and verbose. The same method is used to calculate the gizmo position.
+The Lissajous movement is implemented in very simple way. There is a public static method `CalculatePosition` which calculates the new postition based on formula parameters and time. Then the result of the method is assigned to the local position of the object. Thanks to the use of Unity Mathematics package the formula form is very simple and verbose. The same method is used to calculate the gizmo position.
 
-Because the CalculatePosition method is static and public in can be easily used in Editor scripts as well. When visualizing the curve in the scene view Lissajous curve parameters are loaded from serialized properties of edited object and then the method is applied to calculate a position for different points. The curve is then drawn as a series of lines connecting these points.
+Because the `CalculatePosition` method is static and public in can be easily used in Editor scripts as well. When visualizing the curve in the scene view Lissajous curve parameters are loaded from serialized properties of edited object and then the method is applied to calculate a position for different points. The curve is then drawn as a series of lines connecting these points.
 
 
 ### Object Rotation
@@ -78,8 +80,13 @@ AngleColorChanger uses another pretty straight forward approach. First the dot p
 By using `material` property instead of `sharedMaterial` the material copy is instantiated and assigned to the MeshRenderer. This ensures that only the specified object will change the color and potentially other objects using the same material won't be affected by the color change.
 
 
-
 ## Assumptions and challenges
+
+
+
+
+
+
 
 
 
