@@ -75,7 +75,6 @@ namespace ProceduralMeshCreation
                         vertices.Add(radialVertex);
                         uvs.Add(new Vector2(i * uvDeltaX, 0.5f - 0.5f * j * uvDeltaY));
 
-                        bool isLast = i == resolution.x - 1;
                         int right = i + 1;
                         int left = right % resolution.x + 1;
                         int top = (j - 1) * resolution.x;
