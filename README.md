@@ -37,7 +37,7 @@ where **X** is the result position and **t** is current time.
 The formula is applied for each axis which results in chaotic movement for different parameters.
 
 While adjusting the parameters the preview of the curve is displayed in the scene in form of a yellow line and a moving sphere gizmo visualizing the movement of the object.
-
+ 
 
 ### Object Rotation
 Rotation of object is handled by **LimitedSpeedLookAt** component. It rotates the GameObject it's added to towards the target transform with a specified angular speed. The target and angular speed can be set in inspector and also changed in runtime by setting corresponding properties.
@@ -53,11 +53,11 @@ The MeshRenderer, the gradient and the target object can be specified in the ins
 Organic movement of mesh vertices is achieved by using a custom shader created in Shadergraph named **Organic**.
 The materials of this shader can be configured with 3 properties:
 1. Color - color of the mesh. It's needed specifically for dynamic color changes of the mesh.
-2. Noise strenght - what distance from the default location can the vertices be moved.
+2. Noise strength - what distance from the default location can the vertices be moved.
 3. Speed - the speed of of changes.
 
 ## Description of the implementation
-### Procedural Mesh
+### Procedural Mesh 
 The Procedural Mesh Creation system is based on two classes: (1) ProceduralMesh which is a component and (2) ProceduralMeshAsset which is an abstract class deriving from ScriptableObject class. Developers can define their own procedural meshes by extending ProceduralMeshAsset class and implementing `BuildMesh` method.
 
 ProceduralMeshAsset contains an internal event `OnChanged` which ProceduralMesh it's assigned to listens to. It is invoked in assets `OnValidate` method. This makes the scene mesh instance refresh each time the procedural mesh asset properties change.
@@ -76,13 +76,13 @@ Because the `CalculatePosition` method is static and public in can be easily use
 
 
 ### Object Rotation
-The implementation of the LimitedSpeedLookAt component uses `Vector3.RotateTowards` static method to calculate slightly rotated direction. Then assigns it to transform.forward property resulting in gradual rotation of the object. 
+The implementation of the LimitedSpeedLookAt component uses `Vector3.RotateTowards` static method to calculate a slightly rotated direction. Then assigns it to transform.forward property resulting in gradual rotation of the object. 
 
-Of course it could be implemented manually by calculation the cross product of the two vectors (current direction and target direction), making it a rotation axis and then rotating the vector by a small angle about this axis. However using `Vector3.RotateTowards` seems to be more elegant approach (and possibly more performant).
+Of course it could be implemented manually by calculating the cross product of the two vectors (current direction and target direction), making it a rotation axis and then rotating the vector by a small angle about this axis. However using `Vector3.RotateTowards` seems to be more elegant approach (and possibly more performant).
 
 
 ### Color Change Based on Angle
-AngleColorChanger uses another pretty straight forward approach. First the dot product is calculated between direction towards target and current forward direction resulting in value in range between 1 and -1, where value equal 1  means object is facing the target and -1 means the object is backwards to the target. This dot value is then converted to a progress value ranging between 0 and 1, which can be then used to evaluate the color from the gradient. Resulting color is then set to the MeshRenderers material. 
+AngleColorChanger uses another pretty straight forward approach. First the dot product is calculated between direction towards target and current forward direction resulting in value in range between 1 and -1, where value equal 1  means object is facing the target and -1 means the object is backwards to the target. This dot value is then mapped to a progress value ranging between 0 and 1 using `InverseLerp`, which can be used to evaluate the color from the gradient. Resulting color is then set to the MeshRenderers material. 
 
 By using `material` property instead of `sharedMaterial` the material copy is instantiated and assigned to the MeshRenderer. This ensures that only the specified object will change the color and potentially other objects using the same material won't be affected by the color change.
 
@@ -91,13 +91,7 @@ By using `material` property instead of `sharedMaterial` the material copy is in
 The Organic shader is created using Shadergraph. The perlin noise values are obtained from *Gradient Noise* node which is basically perlin noise implemented in Shadergraph. The noise is moved in circles thanks to sine and cosine functions applied to time value and *Tiling And Offset* node. Then mesh vertices are moved along corresponding normals in `Vertex` function. In `Fragment` function only the color is applied to *Base Color* output. 
 
 
-
-
 ## Assumptions and challenges
-
-
-
-
-
-
-
+1) In some components I added public setters and getters to enable changing them in runtime (even if it wasn't specified) and in others I didn't, according to my intuition of which values are likely to be changed in runtime in case of further project development. If needed they always can be added later.
+2) Exact shape of the cone with sphere wasn't specified, so I assumed the cone surface should be tangent to the sphere surface
+3) For Lissajous animation I chose the most universal formula including all parameters and all axes to calculate the movement. If any of them is not needed it can just be kept with value zero.
