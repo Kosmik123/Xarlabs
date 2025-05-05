@@ -86,7 +86,7 @@ public class LissajousMovementEditor : UnityEditor.Editor
             previousFrequencies = frequencies;
             frequency = GreatestCommonDivisor3(frequencies.x, frequencies.y, frequencies.z);
         }
-        float period = 2f / frequency;
+        float period = 1f / frequency;
         int resolution = Mathf.FloorToInt(period / preferedTimeDelta);
         float dt = period / resolution;
 

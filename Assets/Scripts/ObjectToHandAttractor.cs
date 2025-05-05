@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ObjectToHandAttractor : MonoBehaviour
 {
@@ -67,5 +66,6 @@ public class ObjectToHandAttractor : MonoBehaviour
     private void OnDisable()
     {
         inputAction.action.performed -= Action_performed;
-    }
+        inputAction.action.canceled -= Action_canceled;
+	}
 }

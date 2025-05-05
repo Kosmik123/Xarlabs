@@ -16,14 +16,14 @@ namespace ProceduralMeshCreation
             }
         }
 
-        private Mesh mesh;
+        private Mesh _mesh;
         public Mesh Mesh
         {
             get
             {
-                if (mesh == null)
-                    mesh = new Mesh();
-                return mesh;
+                if (_mesh == null)
+                    _mesh = new Mesh();
+                return _mesh;
             }
         }
 
