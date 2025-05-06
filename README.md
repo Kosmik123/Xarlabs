@@ -1,6 +1,7 @@
 # Xarlabs Demo
 
 ## Setup instructions
+The project is created using Unity 6 (6000.0.45f1). It's highly recommended to open it with the same version of the engine, but most likely any version of Unity 6 should work.
 
 ### Scenes 
 There are two scenes in the project: 
@@ -16,6 +17,8 @@ In order to use procedurally created mesh two objects are needed:
 Upon assigning the ProceduralMeshAsset object to the ProceduralMesh component, the mesh will be assigned to the MeshFilter and automatically refreshed in case of any change. Mesh will also be refreshed on game start. It can be also refreshed manually by choosing "Refresh" option from component context menu. Disabling the component disables the automatic refreshing.
 
 Alternatively the mesh can be exported as a static *.mesh* file and applied manually to a MeshFilter (or even MeshCollider). To do that there is an "Export" context menu option in every ProceduralMeshAsset object. This way the mesh can be assigned to appropriate components without using ProceduralMesh component.
+
+While refreshing the ProceduralMesh the warning is called, because of assigning sharedMesh property of MeshFilter in `OnValidate`. As far as I know it can't be avoided, but it doesn't break any functionality. 
 
 #### DropProceduralMeshAsset
 **DropProceduralMeshAsset** is a concrete class of ProceduralMeshAsset which creates a drop-shaped mesh with a cone on one side and a spherical surface on the other. There are several properties that specify the details of the shape:
@@ -92,6 +95,12 @@ The Organic shader is created using Shadergraph. The perlin noise values are obt
 
 
 ## Assumptions and challenges
+### Assumptions
 1) In some components I added public setters and getters to enable changing them in runtime (even if it wasn't specified) and in others I didn't, according to my intuition of which values are likely to be changed in runtime in case of further project development. If needed they always can be added later.
 2) Exact shape of the cone with sphere wasn't specified, so I assumed the cone surface should be tangent to the sphere surface
 3) For Lissajous animation I chose the most universal formula including all parameters and all axes to calculate the movement. If any of them is not needed it can just be kept with value zero.
+4) UV of the drop shape is separated into 2 halfs. The upper half is projected on the cone and the lower half on the sphere. 
+
+### Challenges
+1) Making the cone surface tangent to the sphere seemed challenging at first. However after drawing the outline of the whole shape, and marking the lengths and angles of the resulting right triangle, the solution became apparent.
+2) Initially I planned to skip Bonus AR/VR Integration, because of lack of VR headset. But thanks to XR Simulator provided with Unity XR packages testing XR setup became possible. However the project might have bugs that can't be detected with just simulator, so testing with a real headset should be still conducted.  
